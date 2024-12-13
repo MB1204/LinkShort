@@ -188,7 +188,25 @@
         <div id="response" class="response-message"></div> <!-- Response area -->
         
     </div>
-
+<script>
+    fetch('https://your-railway-app-name.railway.app/generate-free-link', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+        link: 'your-link',
+        customName: 'your-custom-name'
+    })
+})
+.then(response => response.text())
+.then(data => {
+    console.log(data); // Handle the response
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+</script>
 </body>
 </html>
 
