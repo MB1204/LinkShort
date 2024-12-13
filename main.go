@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -19,6 +20,22 @@ func cors(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+// serveHTML serves the HTML content from the index.html file
+func serveHTML(w http.ResponseWriter, r *http.Request) {
+	// Read the HTML file
+	htmlContent, err := ioutil.ReadFile("index.html")
+	if err != nil {
+		http.Error(w, "Unable to read HTML file", http.StatusInternalServerError)
+		return
+	}
+
+	// Set the content type to HTML
+	w.Header().Set("Content-Type", "text/html")
+
+	// Write the HTML content to the response
+	w.Write(htmlContent)
 }
 
 // generateLink handles the form submission
@@ -51,8 +68,8 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Serve static files from the "static" directory
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	// Serve the HTML page at the root URL
+	http.HandleFunc("/", serveHTML)
 
 	// Handle the form submission with CORS middleware
 	http.Handle("/generate-free-link", cors(http.HandlerFunc(generateLink)))
