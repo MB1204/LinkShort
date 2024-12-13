@@ -43,5 +43,5 @@ func main() {
 
 	// Start the server
 	fmt.Println("Server is running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", nil) 
 }
