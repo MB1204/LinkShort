@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 )
+
+// CORS middleware to handle CORS requests
 func cors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*") // Change "*" to your frontend URL in production
@@ -18,6 +20,7 @@ func cors(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
 // generateLink handles the form submission
 func generateLink(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
@@ -28,14 +31,15 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Get the custom name from the form
+		// Get the link and custom name from the form
+		
 		customName := r.FormValue("customName")
 
 		// Generate the new link
 		newLink := fmt.Sprintf("%s/%s", "bytelink.com/bitly", customName)
 
 		// Prepare the response
-		response := fmt.Sprintf("Your new link is: <a href='%s'>%s</a>", newLink, newLink)
+		response := fmt.Sprintf("Your new link is: <a href='%s' target='_blank'>%s</a>", newLink, newLink)
 
 		// Send the response back to the client
 		w.Header().Set("Content-Type", "text/html")
@@ -51,8 +55,14 @@ func main() {
 	// Serve static files from the "static" directory
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 
-	// Handle the form submission
-	http.HandleFunc("/generate-free-link", generateLink)
+	// Handle the form submission with CORS middleware
+	http.Handle("/generate-free-link", cors(http.HandlerFunc(generateLink)))
+
+		// Set Content Security Policy
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' https://unpkg.com; object-src 'none';")
+			http.FileServer(http.Dir("./static")).ServeHTTP(w, r)
+		})
 
 	// Start the server
 	fmt.Println("Server is running on http://localhost:8080")
