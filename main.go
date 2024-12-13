@@ -4,7 +4,20 @@ import (
 	"fmt"
 	"net/http"
 )
+func cors(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*") // Change "*" to your frontend URL in production
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
+		// Handle preflight requests
+		if r.Method == http.MethodOptions {
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
 // generateLink handles the form submission
 func generateLink(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
