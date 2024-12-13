@@ -159,6 +159,25 @@
             margin: 10px;
         }
     </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('linkForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            fetch('/generate-free-link', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('response').innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
 </head>
 <body>
 
@@ -176,37 +195,15 @@
         <p>This is a sleek and modern design with a central focus on automation solutions.</p>
         <br>
         <h2>Submit Your Link</h2>
-        <form id="linkForm" 
-          hx-post="linkshort-production-bd5a.up.railway.app/generate-free-link" 
-          hx-target="#response" 
-          hx-swap="innerHTML">
-        <input type="text" name="link" placeholder="Enter link" required />
-        <input type="text" name="customName" placeholder="Enter custom name" required />
-        <button type="submit">Generate Link</button>
-    </form>
+        <form action="/generate-free-link" method="POST" onsubmit="handleSubmit(event)">
+            <input type="text" name="link" placeholder="Enter link" required />
+            <input type="text" name="customName" placeholder="Enter custom name" required />
+            <button type="submit">Generate Link</button>
+        </form>
         
         <div id="response" class="response-message"></div> <!-- Response area -->
         
     </div>
-<script>
-    fetch('linkshort-production-bd5a.up.railway.app/generate-free-link', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-        link: 'your-link',
-        customName: 'your-custom-name'
-    })
-})
-.then(response => response.text())
-.then(data => {
-    console.log(data); // Handle the response
-})
-.catch(error => {
-    console.error('Error:', error);
-});
-</script>
-</body>
+  
 </html>
 
