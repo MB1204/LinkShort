@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteWave</title>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+
+        /* Logo and Title */
+        header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Logo Design */
+        .logo {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: spin 5s infinite linear;
+        }
+
+        /* Inner Circle */
+        .logo::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        /* Diagonal Line */
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: white;
+            transform: rotate(45deg);
+        }
+
+        /* Company Title */
+        .company-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Center Box Styling */
+        .center-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .center-box h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .center-box p {
+            color: #ddd;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .textbox {
+            border-radius: 15px; /* Rounded corners */
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .submit-button {
+            width: 40%;
+            padding: 5px;
+            background-color: #3498db;
+            border: none; /* Fixed border issue */
+            border-radius: 15px; /* Rounded corners */
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        /* Logo Animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .company-title {
+                font-size: 2rem;
+            }
+
+            .center-box h2 {
+                font-size: 1.8rem;
+            }
+
+            .center-box p {
+                font-size: 1rem;
+            }
+        }
+
+        .Name-label {
+            margin-right: 30px;
+        }
+
+        .link-label {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo and Title -->
+    <header>
+        <div class="logo-title">
+            <div class="logo"></div>
+            <h1 class="company-title">ByteWave</h1>
+        </div>
+    </header>
+
+    <!-- Center Box -->
+    <div class="center-box">
+        <h2>Welcome to ByteWave</h2>
+        <p>This is a sleek and modern design with a central focus on automation solutions.</p>
+        <br>
+        <h2>Submit Your Link</h2>
+        <form id="freeLinkForm" hx-post="/generate-free-link" hx-target="#response" hx-trigger="submit">
+            <div class="link-label">
+                <label>Enter your link:</label>
+                <input type="url" name="link" required />
+            </div>
+            <div class="Name-label">
+                <label>Enter custom name:</label>
+                <input type="text" name="customName" required />
+            </div>
+            <button type="submit" class="submit-button">Generate Free Link</button>
+        </form>
+        
+        <div id="response" class="response-message"></div> <!-- Response area -->
+        
+    </div>
+
+</body>
+</html>
+
