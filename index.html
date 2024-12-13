@@ -176,17 +176,14 @@
         <p>This is a sleek and modern design with a central focus on automation solutions.</p>
         <br>
         <h2>Submit Your Link</h2>
-        <form id="freeLinkForm"hx-post="linkshort-production-bd5a.up.railway.app/generate-free-link"  hx-target="#response" hx-trigger="submit">
-            <div class="link-label">
-                <label>Enter your link:</label>
-                <input type="url" name="link" required />
-            </div>
-            <div class="Name-label">
-                <label>Enter custom name:</label>
-                <input type="text" name="customName" required />
-            </div>
-            <button type="submit" class="submit-button">Generate Free Link</button>
-        </form>
+        <form id="linkForm" 
+          hx-post="linkshort-production-bd5a.up.railway.app/generate-free-link" 
+          hx-target="#response" 
+          hx-swap="innerHTML">
+        <input type="text" name="link" placeholder="Enter link" required />
+        <input type="text" name="customName" placeholder="Enter custom name" required />
+        <button type="submit">Generate Link</button>
+    </form>
         
         <div id="response" class="response-message"></div> <!-- Response area -->
         

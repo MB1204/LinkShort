@@ -32,7 +32,7 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get the link and custom name from the form
-		
+		link := r.FormValue("link")
 		customName := r.FormValue("customName")
 
 		// Generate the new link
@@ -57,12 +57,6 @@ func main() {
 
 	// Handle the form submission with CORS middleware
 	http.Handle("/generate-free-link", cors(http.HandlerFunc(generateLink)))
-
-		// Set Content Security Policy
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' https://unpkg.com; object-src 'none';")
-			http.FileServer(http.Dir("./static")).ServeHTTP(w, r)
-		})
 
 	// Start the server
 	fmt.Println("Server is running on http://localhost:8080")
