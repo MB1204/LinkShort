@@ -31,8 +31,7 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Get the link and custom name from the form
-		link := r.FormValue("link")
+		// Get the custom name from the form
 		customName := r.FormValue("customName")
 
 		// Generate the new link
@@ -60,5 +59,7 @@ func main() {
 
 	// Start the server
 	fmt.Println("Server is running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil) 
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Println("Error starting server:", err)
+	}
 }
