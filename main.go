@@ -36,8 +36,8 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
         linkMap[customName] = link
         mu.Unlock()
 
-        // Generate the new link
-        newLink := fmt.Sprintf("https://bytelink.com/bitly/%s", customName)
+        // Generate the new link in the format "new link name + .byteLink.bitly"
+        newLink := fmt.Sprintf("%s.byteLink.bitly", customName)
 
         // Prepare the response
         response := fmt.Sprintf("Your new link is: <a href='%s' target='_blank'>%s</a>", newLink, newLink)
