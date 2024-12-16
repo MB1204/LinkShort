@@ -3,11 +3,11 @@ package main
 import (
     "fmt"
     "net/http"
-    "os"
 )
 
 // serveHTML serves the HTML content from the index.html file
 func serveHTML(w http.ResponseWriter, r *http.Request) {
+    // Serve the HTML file
     http.ServeFile(w, r, "index.html")
 }
 
@@ -43,12 +43,11 @@ func main() {
     http.HandleFunc("/", serveHTML)
 
     // Handle the form submission
-    http.HandleFunc("/generate-link", generateLink)
+    http.HandleFunc("/generate-free-link", generateLink)
 
     // Start the server
     fmt.Println("Server is running on http://localhost:8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
         fmt.Println("Error starting server:", err)
-        os.Exit(1)
     }
 }
