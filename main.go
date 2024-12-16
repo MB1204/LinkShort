@@ -3,6 +3,7 @@ package main
 import (
     "fmt"
     "net/http"
+    "os"
 )
 
 // serveHTML serves the HTML content from the index.html file
@@ -45,9 +46,15 @@ func main() {
     // Handle the form submission
     http.HandleFunc("/generate-free-link", generateLink)
 
+    // Get the port from the environment variable or default to 8080
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080" // Default port for local development
+    }
+
     // Start the server
-    fmt.Println("Server is running on http://localhost:8080")
-    if err := http.ListenAndServe(":8080", nil); err != nil {
+    fmt.Printf("Server is running on port %s\n", port)
+    if err := http.ListenAndServe(":"+port, nil); err != nil {
         fmt.Println("Error starting server:", err)
     }
 }
