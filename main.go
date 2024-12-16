@@ -4,7 +4,12 @@ import (
     "fmt"
     "net/http"
     "os"
+    "sync"
 )
+
+// Global map to store custom names and their corresponding links
+var linkMap = make(map[string]string) // Global map to store custom names and their corresponding links
+var mu sync.Mutex // Mutex to handle concurrent access
 
 // serveHTML serves the HTML content from the index.html file
 func serveHTML(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +29,12 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
 
         // Get the custom name from the form
         customName := r.FormValue("customName")
+        link := r.FormValue("link") // Get the actual link from the form
+
+        // Store the mapping
+        mu.Lock()
+        linkMap[customName] = link
+        mu.Unlock()
 
         // Generate the new link
         newLink := fmt.Sprintf("https://bytelink.com/bitly/%s", customName)
@@ -39,12 +50,30 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
     http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 }
 
+// redirectLink handles redirection based on the custom name
+func redirectLink(w http.ResponseWriter, r *http.Request) {
+    customName := r.URL.Path[len("/bitly/"):] // Extract custom name from URL
+
+    mu.Lock()
+    link, exists := linkMap[customName]
+    mu.Unlock()
+
+    if exists {
+        http.Redirect(w, r, link, http.StatusFound) // Redirect to the actual link
+    } else {
+        http.Error(w, "Link not found", http.StatusNotFound)
+    }
+}
+
 func main() {
     // Serve the HTML page at the root URL
     http.HandleFunc("/", serveHTML)
 
     // Handle the form submission
     http.HandleFunc("/generate-free-link", generateLink)
+
+    // Handle redirection for generated links
+    http.HandleFunc("/bitly/", redirectLink)
 
     // Get the port from the environment variable or default to 8080
     port := os.Getenv("PORT")
