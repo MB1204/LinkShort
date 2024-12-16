@@ -1,11 +1,12 @@
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "net/http"
+    "os"
 )
 
+// serveHTML serves the HTML content from the index.html file
 func serveHTML(w http.ResponseWriter, r *http.Request) {
     http.ServeFile(w, r, "index.html")
 }
@@ -26,10 +27,10 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
         // Generate the new link
         newLink := fmt.Sprintf("https://bytelink.com/bitly/%s", customName)
 
-        // Prepare the JSON response
-        response := map[string]string{"newLink": newLink}
-        w.Header().Set("Content-Type", "application/json")
-        json.NewEncoder(w).Encode(response)
+        // Prepare the response
+        response := fmt.Sprintf("Your new link is: <a href='%s' target='_blank'>%s</a>", newLink, newLink)
+        w.Header().Set("Content-Type", "text/html")
+        fmt.Fprint(w, response)
         return
     }
 
@@ -38,6 +39,9 @@ func generateLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+    // Serve the HTML page at the root URL
+    http.HandleFunc("/", serveHTML)
+
     // Handle the form submission
     http.HandleFunc("/generate-link", generateLink)
 
@@ -45,5 +49,6 @@ func main() {
     fmt.Println("Server is running on http://localhost:8080")
     if err := http.ListenAndServe(":8080", nil); err != nil {
         fmt.Println("Error starting server:", err)
+        os.Exit(1)
     }
 }
