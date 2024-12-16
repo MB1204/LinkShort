@@ -6,6 +6,10 @@ import (
     "net/http"
 )
 
+func serveHTML(w http.ResponseWriter, r *http.Request) {
+    http.ServeFile(w, r, "index.html")
+}
+
 // generateLink handles the form submission
 func generateLink(w http.ResponseWriter, r *http.Request) {
     if r.Method == http.MethodPost {
